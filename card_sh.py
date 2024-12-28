@@ -1,6 +1,4 @@
 import random
-from colorama import Fore, Back, Style
-import emojis
 
 num = ("A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K")
 suits = ("\u2663", "\u2666", "\u2665", "\u2660")
@@ -15,11 +13,15 @@ value_map = {
     "8": 8, "9": 9, "10": 10, "J": 0, "Q": 0, "K": 0
 }
 
-num_players = int(input(emojis.encode(f"\n👉 {Fore.GREEN}Enter number of players: ")))
+num_players = int(input("Enter number of players: "))
 
 random.shuffle(cards)
+
+# TODO: FOR TEST WITH STATIC
 hands = {'Player 1': ['A♥', 'A♣', 'A♠'], 'Player 2': ['Q♥', 'K♥', 'J♠']}
 
+
+# TODO: FOR TEST WITH INPUT
 # hands = {}
 # for i in range(num_players):
 #     hands[f"Player {i+1}"] = [cards.pop() for _ in range(3)]
@@ -27,9 +29,8 @@ hands = {'Player 1': ['A♥', 'A♣', 'A♠'], 'Player 2': ['Q♥', 'K♥', 'J�
 scores = {}
 special_matches = {}
 
-print(f"{Style.RESET_ALL}")
 for player, hand in hands.items():
-    print(emojis.encode(f"{Fore.CYAN}👾 {player} has cards {hand}{Style.RESET_ALL}"))
+    print(f"{player} has cards {hand}")
     values = sorted(card[:-1] for card in hand)
 
     if values == ["1", "1", "1"]:
@@ -68,23 +69,23 @@ for player, hand in hands.items():
         total = sum(value_map[card[:-1]] for card in hand)
         score = total % 10
         scores[player] = score
-        print(f"{Fore.CYAN}Score = {score}{Style.RESET_ALL}")
+        print(f"Score = {score}")
 
 getMatch = {}
 if special_matches:
-    print(f"\n{Fore.MAGENTA}Special Card Winners:{Style.RESET_ALL}\n")
+    print("\nSpecial Card Winners:\n")
     for player, match in special_matches.items():
         getMatch[player] = match
-        print(emojis.encode(f"{Fore.MAGENTA}👾 {player} wins with special card: {match}{Style.RESET_ALL}"))
+        print(f"{player} wins with special card: {match}")
 
 if getMatch:
     for winPlayer, winMatch in getMatch.items():
-        if(winMatch in special_cards):
-            print(emojis.encode(f"\n{Fore.RED}💥 Last winner is {winPlayer} with card: {winMatch}{Style.RESET_ALL}"))
+        if winMatch in special_cards:
+            print(f"\nLast winner is {winPlayer} with card: {winMatch}")
 
 else:
     max_score = max(scores.values())
     winners = [player for player, score in scores.items() if score == max_score]
-    print(f"\n{Fore.BLUE}Winner(s):{Style.RESET_ALL}")
+    print("\nWinner(s):")
     for winner in winners:
-        print(f"{Fore.BLUE}{winner}{Style.RESET_ALL}")
+        print(winner)

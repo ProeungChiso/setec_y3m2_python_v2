@@ -1,10 +1,8 @@
 import random
 
-
 def generate_lottery_numbers(num_count, num_range):
     """Generate a set of random lottery numbers."""
     return set(random.sample(range(1, num_range + 1), num_count))
-
 
 def get_player_numbers(num_count, num_range):
     """Get player's lottery numbers."""
