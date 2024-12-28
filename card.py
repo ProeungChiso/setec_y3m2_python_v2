@@ -1,6 +1,5 @@
 import random
 from colorama import Fore, Back, Style
-import emojis
 
 num = ("A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K")
 suits = ("\u2663", "\u2666", "\u2665", "\u2660")
@@ -15,21 +14,27 @@ value_map = {
     "8": 8, "9": 9, "10": 10, "J": 0, "Q": 0, "K": 0
 }
 
-num_players = int(input(emojis.encode(f"\n👉 {Fore.GREEN}Enter number of players: ")))
+print("\nOriginal Card : ", len(cards))
+
+num_players = int(input(f"\nEnter number of players: "))
 
 random.shuffle(cards)
-hands = {'Player 1': ['A♥', 'A♣', 'A♠'], 'Player 2': ['Q♥', 'K♥', 'J♠']}
+hands = {
+    'Player 1': ['A♥', 'A♣', 'A♠'], 
+    'Player 2': ['Q♥', 'K♥', 'J♠']}
 
-# hands = {}
-# for i in range(num_players):
-#     hands[f"Player {i+1}"] = [cards.pop() for _ in range(3)]
+if num_players == 2:
+    num_players = 2
+
+for i in range(num_players - 2):
+    hands[f"Player {i+3}"] = [cards.pop() for _ in range(3)]
 
 scores = {}
 special_matches = {}
 
 print(f"{Style.RESET_ALL}")
 for player, hand in hands.items():
-    print(emojis.encode(f"{Fore.CYAN}👾 {player} has cards {hand}{Style.RESET_ALL}"))
+    print(f"{player} has cards {hand}")
     values = sorted(card[:-1] for card in hand)
 
     if values == ["1", "1", "1"]:
@@ -60,31 +65,36 @@ for player, hand in hands.items():
         special_matches[player] = "KKK"
     elif values == ["A", "A", "A"]:
         special_matches[player] = "AAA"
-    
     elif "".join(values) in special_permutations:
         special_matches[player] = "JQK"
-
     else:
         total = sum(value_map[card[:-1]] for card in hand)
         score = total % 10
         scores[player] = score
-        print(f"{Fore.CYAN}Score = {score}{Style.RESET_ALL}")
+        print(f"Score = {score}")
 
 getMatch = {}
 if special_matches:
-    print(f"\n{Fore.MAGENTA}Special Card Winners:{Style.RESET_ALL}\n")
+    print(f"\nSpecial Card Winners:\n")
     for player, match in special_matches.items():
         getMatch[player] = match
-        print(emojis.encode(f"{Fore.MAGENTA}👾 {player} wins with special card: {match}{Style.RESET_ALL}"))
+        print(f"{player} wins with special card: {match}")
 
 if getMatch:
     for winPlayer, winMatch in getMatch.items():
-        if(winMatch in special_cards):
-            print(emojis.encode(f"\n{Fore.RED}💥 Last winner is {winPlayer} with card: {winMatch}{Style.RESET_ALL}"))
-
+        if winMatch in special_cards:
+            print(f"\nLast winner is {winPlayer} with card: {winMatch}")
 else:
     max_score = max(scores.values())
     winners = [player for player, score in scores.items() if score == max_score]
-    print(f"\n{Fore.BLUE}Winner(s):{Style.RESET_ALL}")
+    print(f"\nWinner(s):")
     for winner in winners:
-        print(f"{Fore.BLUE}{winner}{Style.RESET_ALL}")
+        print(f"{winner}")
+
+for hand in hands.values():
+    for card in hand:
+        if card in cards:
+            cards.remove(card)
+
+print("\nLast Card: ", len(cards))
+print("\n", cards)
